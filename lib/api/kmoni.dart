@@ -5,7 +5,8 @@ import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
-import '../schema/ApiResult/EEW.dart';
+import '../schema/kmoni/EEW.dart';
+
 
 class KyoshinMonitorApi {
   final Dio dio = Dio()
@@ -13,7 +14,7 @@ class KyoshinMonitorApi {
     ..interceptors.add(LogInterceptor())
     ..httpClientAdapter = Http2Adapter(
       ConnectionManager(
-        idleTimeout: 10000,
+        idleTimeout: 1000,
         // Ignore bad certificate
         onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
       ),

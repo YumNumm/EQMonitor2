@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 import 'color.dart';
 
@@ -39,3 +40,6 @@ ThemeData lightTheme() {
     ),
   );
 }
+
+bool isDarkmodeOnSystem() =>
+    SchedulerBinding.instance.window.platformBrightness == Brightness.dark;

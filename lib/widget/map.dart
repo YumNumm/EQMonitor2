@@ -1,11 +1,9 @@
-import 'package:eqmonitor2/main.dart';
+import 'package:eqmonitor2/state/all_state.dart';
 import 'package:flutter/material.dart' hide Theme;
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:vector_map_tiles/vector_map_tiles.dart';
-
-import '../controller/mapController.dart';
+import 'package:logger/logger.dart';
 
 class MapWidget extends ConsumerStatefulWidget {
   const MapWidget({Key? key}) : super(key: key);
@@ -18,33 +16,45 @@ class MapWidgetState extends ConsumerState<MapWidget> {
   @override
   void initState() {
     super.initState();
+    // ref.read(kmoniMapNotifier.notifier).onInit();
   }
 
   @override
   Widget build(BuildContext context) {
     /// MapController
-    final mapController = ref.watch(kmoniMapProvider);
+    final kmoniMap = ref.watch(kmoniMapNotifier);
+
+    final Logger logger = Logger();
 
     return FlutterMap(
-      mapController: mapController,
+      mapController: kmoniMap.mapController,
       options: MapOptions(
         center: LatLng(
           35,
           135,
         ),
-        /*interactiveFlags: InteractiveFlag.drag |
+        interactiveFlags: InteractiveFlag.drag |
             InteractiveFlag.flingAnimation |
             InteractiveFlag.pinchZoom |
             InteractiveFlag.doubleTapZoom |
-            InteractiveFlag.pinchMove,*/
+            InteractiveFlag.pinchMove,
       ),
       layers: [
-        TileLayerOptions(
-            urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-            subdomains: ['a', 'b', 'c']),
         PolygonLayerOptions(
-          polygons: polygons,
-          polygonCulling: false,
+          polygons: kmoniMap.japanPolygons,
+          polygonCulling: true,
+        ),
+        CircleLayerOptions(
+          circles: [
+            CircleMarker(
+              point: LatLng(
+                35,
+                135,
+              ),
+              radius: 10,
+              color: Colors.red,
+            ),
+          ],
         ),
       ],
     );

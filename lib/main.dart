@@ -19,8 +19,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 
-late GeoJsonFeatureCollection japanMap;
-final List<Polygon> polygons = [];
 
 Future<void> main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -43,41 +41,6 @@ Future<void> main() async {
   await crashlytics.sendUnsentReports();
   await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
   await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
-
-  // Load Map(JP)
-  final japanMapFile = await rootBundle.loadString('assets/maps/japan.json');
-  japanMap = await featuresFromGeoJson(japanMapFile, verbose: kDebugMode);
-  final p = japanMap.collection.forEach((e) {
-    if (e.geometry.runtimeType == GeoJsonMultiPolygon) {
-      final geometry = e.geometry as GeoJsonMultiPolygon;
-      for (var e in geometry.polygons) {
-        for (var element in e.geoSeries) {
-          Polygon polygon = Polygon(
-            points: element.geoPoints.map((e) => e.toLatLng()!).toList(),
-            label: geometry.name,
-            color: const Color.fromARGB(255, 0, 144, 2),
-            borderColor: const Color.fromARGB(255, 1, 72, 2),
-            isFilled: true,
-            borderStrokeWidth: 1,
-          );
-          polygons.add(polygon);
-        }
-      }
-    } else if (e.geometry.runtimeType == GeoJsonPolygon) {
-      final geometry = e.geometry as GeoJsonPolygon;
-      for (var element in geometry.geoSeries) {
-        Polygon polygon = Polygon(
-          points: element.geoPoints.map((e) => e.toLatLng()!).toList(),
-          label: e.properties?['name']?.toString(),
-          color: const Color.fromARGB(255, 0, 144, 2),
-          borderColor: const Color.fromARGB(255, 1, 72, 2),
-          isFilled: true,
-        );
-        polygons.add(polygon);
-      }
-    }
-  });
-  log(polygons.length.toString());
 
   runApp(
     DevicePreview(
