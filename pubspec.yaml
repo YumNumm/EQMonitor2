@@ -1,0 +1,150 @@
+name: eqmonitor2
+description: A new Flutter project.
+
+publish_to: "none"
+version: 0.0.1+2
+
+environment:
+  sdk: ">=2.17.3 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.2
+  flutter_riverpod: ^1.0.4
+  hooks_riverpod: ^1.0.4
+  state_notifier: ^0.7.2+1
+  freezed_annotation: ^2.0.3
+  intl: ^0.17.0
+  dio: ^4.0.6
+  logger: ^1.1.0
+  isar: ^2.5.0
+  path_provider: ^2.0.11
+  isar_flutter_libs: ^2.5.0
+  geojson: ^1.0.0
+  image: ^3.2.0
+  oauth1: ^2.0.0
+  url_launcher: ^6.1.3
+  awesome_notifications: ^0.6.21
+  html: ^0.15.0
+  shared_preferences: ^2.0.15
+  flutter_tts: ^3.4.0
+  auto_size_text: ^3.0.0
+  flutter_secure_storage: ^5.0.2
+  device_preview: ^1.1.0
+  device_info_plus: ^3.2.4
+  share_plus: ^4.0.8
+  bordered_text: ^2.0.0
+  dio_http2_adapter: ^2.0.0
+  firebase_core: ^1.18.0
+  firebase_crashlytics: ^2.8.2
+  firebase_messaging: ^11.4.2
+  firebase_auth: ^3.3.20
+  firebase_performance: ^0.8.0+14
+  firebase_analytics: ^9.1.10
+  flutter_map: ^1.1.0
+  flutter_native_splash: ^2.2.3+1
+  vector_map_tiles: ^2.1.2
+  latlong2: ^0.8.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+  build_runner: ^2.1.11
+  freezed: ^2.0.3+1
+  json_serializable: ^6.2.0
+  pedantic_mono: ^1.19.2
+  isar_generator: ^2.5.0
+  flutter_launcher_icons: ^0.9.3
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/
+    - assets/intensity/
+    - assets/kmoni/
+    - assets/maps/
+
+  fonts:
+    - family: CaskaydiaCove
+      fonts:
+        - asset: fonts/Caskaydia_Cove_Nerd_Font_Mono.ttf
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/icon.png"
+  adaptive_icon_background: "#f1f5f9"
+  adaptive_icon_foreground: "assets/icon_adaptive.png"
+
+flutter_native_splash:
+  #? flutter pub run flutter_native_splash:create
+  color: "#F1F5F9"
+  #background_image: "assets/background.png"
+
+  # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing
+  # the leading # character.
+
+  # The image parameter allows you to specify an image used in the splash screen.  It must be a
+  # png file and should be sized for 4x pixel density.
+  image: assets/icon.png
+
+  # This property allows you to specify an image used as branding in the splash screen. It must be
+  # a png file. Currently, it is only supported for Android and iOS.
+  #branding: assets/brand.png
+
+  # Specify your branding image for dark mode.
+  #branding_dark: assets/brand_dark.png
+
+  # To position the branding image at the bottom of the screen you can use bottom, bottomRight,
+  # and bottomLeft. The default values is bottom if not specified or specified something else.
+  #
+  # Make sure this content mode value should not be similar to android_gravity value and
+  # ios_content_mode value.
+  #branding_mode: bottom
+
+  # The color_dark, background_image_dark, and image_dark are parameters that set the background
+  # and image when the device is in dark mode. If they are not specified, the app will use the
+  # parameters from above. If the image_dark parameter is specified, color_dark or
+  # background_image_dark must be specified.  color_dark and background_image_dark cannot both be
+  # set.
+  color_dark: "#222222"
+  #background_image_dark: "assets/dark-background.png"
+  image_dark: assets/icon.png
+
+  # The position of the splash image can be set with android_gravity, ios_content_mode, and
+  # web_image_mode parameters.  All default to center.
+  #
+  # android_gravity can be one of the following Android Gravity (see
+  # https://developer.android.com/reference/android/view/Gravity): bottom, center,
+  # center_horizontal, center_vertical, clip_horizontal, clip_vertical, end, fill, fill_horizontal,
+  # fill_vertical, left, right, start, or top.
+  #android_gravity: center
+  #
+  # ios_content_mode can be one of the following iOS UIView.ContentMode (see
+  # https://developer.apple.com/documentation/uikit/uiview/contentmode): scaleToFill,
+  # scaleAspectFit, scaleAspectFill, center, top, bottom, left, right, topLeft, topRight,
+  # bottomLeft, or bottomRight.
+  #ios_content_mode: center
+  #
+  # web_image_mode can be one of the following modes: center, contain, stretch, and cover.
+  #web_image_mode: center
+
+  # To hide the notification bar, use the fullscreen parameter.  Has no effect in web since web
+  # has no notification bar.  Defaults to false.
+  # NOTE: Unlike Android, iOS will not automatically show the notification bar when the app loads.
+  #       To show the notification bar, add the following code to your Flutter app:
+  #       WidgetsFlutterBinding.ensureInitialized();
+  #       SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom, SystemUiOverlay.top]);
+  fullscreen: true
+
+  # If you have changed the name(s) of your info.plist file(s), you can specify the filename(s)
+  # with the info_plist_files parameter.  Remove only the # characters in the three lines below,
+  # do not remove any spaces:
+  #info_plist_files:
+  #  - 'ios/Runner/Info-Debug.plist'
+  #  - 'ios/Runner/Info-Release.plist'

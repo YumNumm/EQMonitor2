@@ -1,0 +1,107 @@
+import 'dart:developer';
+
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:device_preview/device_preview.dart';
+import 'package:eqmonitor2/page/main_page.dart';
+import 'package:eqmonitor2/res/theme.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geojson/geojson.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'firebase_options.dart';
+
+late GeoJsonFeatureCollection japanMap;
+final List<Polygon> polygons = [];
+
+Future<void> main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  // スプラッシュ画面を表示
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // transparent status bar
+    ),
+  );
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  Intl.defaultLocale = 'ja_JP';
+  final prefs = await SharedPreferences.getInstance();
+  final crashlytics = FirebaseCrashlytics.instance;
+  final deviceInfo = await DeviceInfoPlugin().androidInfo;
+  await crashlytics.sendUnsentReports();
+  await crashlytics.setUserIdentifier(deviceInfo.androidId.toString());
+  await crashlytics.setCrashlyticsCollectionEnabled(!kDebugMode);
+
+  // Load Map(JP)
+  final japanMapFile = await rootBundle.loadString('assets/maps/japan.json');
+  japanMap = await featuresFromGeoJson(japanMapFile, verbose: kDebugMode);
+  final p = japanMap.collection.forEach((e) {
+    if (e.geometry.runtimeType == GeoJsonMultiPolygon) {
+      final geometry = e.geometry as GeoJsonMultiPolygon;
+      for (var e in geometry.polygons) {
+        for (var element in e.geoSeries) {
+          Polygon polygon = Polygon(
+            points: element.geoPoints.map((e) => e.toLatLng()!).toList(),
+            label: geometry.name,
+            color: const Color.fromARGB(255, 0, 144, 2),
+            borderColor: const Color.fromARGB(255, 1, 72, 2),
+            isFilled: true,
+            borderStrokeWidth: 1,
+          );
+          polygons.add(polygon);
+        }
+      }
+    } else if (e.geometry.runtimeType == GeoJsonPolygon) {
+      final geometry = e.geometry as GeoJsonPolygon;
+      for (var element in geometry.geoSeries) {
+        Polygon polygon = Polygon(
+          points: element.geoPoints.map((e) => e.toLatLng()!).toList(),
+          label: e.properties?['name']?.toString(),
+          color: const Color.fromARGB(255, 0, 144, 2),
+          borderColor: const Color.fromARGB(255, 1, 72, 2),
+          isFilled: true,
+        );
+        polygons.add(polygon);
+      }
+    }
+  });
+  log(polygons.length.toString());
+
+  runApp(
+    DevicePreview(
+      enabled: kDebugMode,
+      builder: (context) => ProviderScope(
+        child: MaterialApp(
+          title: 'EQMonitor 2',
+          theme: lightTheme(),
+          darkTheme: darkTheme(),
+          locale: DevicePreview.locale(context),
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate
+          ],
+          supportedLocales: const [
+            Locale('ja', 'JP'),
+          ],
+          useInheritedMediaQuery: true,
+          builder: DevicePreview.appBuilder,
+          home: const MainPage(),
+        ),
+      ),
+    ),
+  );
+  FlutterNativeSplash.remove();
+}
