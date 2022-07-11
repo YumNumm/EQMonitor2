@@ -41,7 +41,7 @@ class MapWidgetState extends ConsumerState<MapWidget> {
         PolygonLayerOptions(
           rebuild: Stream.periodic(const Duration(milliseconds: 100)),
           polygons: kmoniMap.japanPolygons,
-          polygonCulling: false,
+          polygonCulling: true,
         ),
         MarkerLayerOptions(
           rebuild: Stream.periodic(const Duration(milliseconds: 100)),
