@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:eqmonitor2/const/kmoni/jma_intensity.dart';
 import 'package:eqmonitor2/const/kmoni/real_time_data_type.dart';
-import 'package:eqmonitor2/model/analyzed_point.model.dart';
+import 'package:eqmonitor2/model/analyzed_point_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image/image.dart' as Image;
 import 'package:logger/logger.dart';
@@ -19,7 +19,7 @@ class KyoshinImageParser {
   }) {
     final List<AnalyzedPoint> analyzedPoints = [];
     Image.Image? image;
-    image = Image.decodePng(picture);
+    image = Image.decodeGif(picture);
     if (image == null) throw Exception("Image was null");
 
     // 画像解析開始
@@ -94,7 +94,6 @@ class KyoshinImageParser {
             40.27 * h +
             3.2217;
       }
-
       if (h <= 0.1476 && h > 0.001) {
         p = 151.4 * pow(h, 4) -
             49.32 * pow(h, 3) +
@@ -102,12 +101,10 @@ class KyoshinImageParser {
             2.481 * h +
             0.9033;
       }
-
       if (h <= 0.001) {
         p = -0.005171 * pow(v, 2) - 0.3282 * v + 1.2236;
       }
     }
-
     if (p < 0) {
       p = 0;
     }

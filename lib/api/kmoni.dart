@@ -3,29 +3,30 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:intl/intl.dart';
-import 'package:logger/logger.dart';
 
 import '../schema/kmoni/EEW.dart';
-
 
 class KyoshinMonitorApi {
   final Dio dio = Dio()
     ..options.baseUrl = 'http://www.kmoni.bosai.go.jp'
-    ..interceptors.add(LogInterceptor())
-    ..httpClientAdapter = Http2Adapter(
-      ConnectionManager(
-        idleTimeout: 1000,
-        // Ignore bad certificate
-        onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
-      ),
-    );
+    ..options.connectTimeout = 5000
+    //..interceptors.add(LogInterceptor())
+    //..httpClientAdapter = Http2Adapter(
+    //  ConnectionManager(
+    //    idleTimeout: 1000,
+    //
+    //    // Ignore bad certificate
+    //   // onClientCreate: (_, config) => config.onBadCertificate = (_) => true,
+    //  ),
+    //);
+    ;
 
   // final _logger = Logger();
 
   /// 強震モニタ サーバ側の最新時刻を取得します
   Future<DateTime> getLatestDateTime() async {
     final res = await dio.get<List<int>>(
-      'webservice/server/pros/latest.json',
+      '/webservice/server/pros/latest.json',
       options: Options(responseType: ResponseType.bytes),
     );
     if (res.statusCode != 200) {
@@ -61,9 +62,11 @@ class KyoshinMonitorApi {
     return KyoshinEEW.fromJson(j);
   }
 
+  /// 強震モニタのAPIを叩く
+  /// [url]には`kmoni.bosai.go.jp`以降を入力
   Future<Response<List<int>>> getRawData(String url) async {
     return await dio.get<List<int>>(
-      'webservice/server/pros/latest.json',
+      url,
       options: Options(responseType: ResponseType.bytes),
     );
   }

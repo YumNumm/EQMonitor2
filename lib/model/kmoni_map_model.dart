@@ -17,12 +17,9 @@ class KmoniMapModel with _$KmoniMapModel {
     // Mapのコントローラ
     required MapController mapController,
 
-    // 観測点の位置
-    required List<ObsPoint> obsPoints,
+
 
     // マップがロードされたかどうか
     required bool isMapLoaded,
-    /// 観測点CSVがロードされたかどうか
-    required bool isKansokutenLoaded,
   }) = _KmoniMapModel;
 }

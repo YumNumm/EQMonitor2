@@ -1,14 +1,14 @@
-import 'dart:convert';
+import 'dart:developer';
 
-import 'package:csv/csv.dart';
-import 'package:eqmonitor2/const/obspoint.dart';
 import 'package:eqmonitor2/model/kmoni_map_model.dart';
 import 'package:eqmonitor2/res/map_color.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geojson/geojson.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:logger/logger.dart';
 
 class KmoniMapNotifier extends StateNotifier<KmoniMapModel> {
@@ -19,9 +19,7 @@ class KmoniMapNotifier extends StateNotifier<KmoniMapModel> {
             worldPolygons: [],
             tsunamiPolygons: [],
             mapController: MapController(),
-            obsPoints: [],
             isMapLoaded: false,
-            isKansokutenLoaded: false,
           ),
         ) {
     onInit();
@@ -33,13 +31,13 @@ class KmoniMapNotifier extends StateNotifier<KmoniMapModel> {
   late GeoJsonFeatureCollection japanMap;
 
   void onInit() {
-    // 観測点データを読み込み
-    _loadKansokuten();
-    // マップを読み込み
-    _loadJapanMap();
+    if (!state.isMapLoaded) {
+      // マップを読み込み
+      _loadJapanMap();
+    }
   }
 
-  void _loadJapanMap({bool showLabel = false}) async {
+  Future<void> _loadJapanMap({bool showLabel = false}) async {
     final japanMapFile = await rootBundle.loadString(japanMapFileName);
     japanMap = await featuresFromGeoJson(japanMapFile);
     final polygons = <Polygon>[];
@@ -83,28 +81,6 @@ class KmoniMapNotifier extends StateNotifier<KmoniMapModel> {
     logger.i("日本地図ポリゴンを読み込みました: ${state.japanPolygons.length}");
   }
 
-  void _loadKansokuten() async {
-    final kansokutenFile = await rootBundle.load("assets/kmoni/kansokuten.csv");
-    final List<List<dynamic>> rowsAsListOfValues =
-        const CsvToListConverter().convert(
-      utf8.decode(kansokutenFile.buffer.asUint8List()),
-    );
-    final List<ObsPoint> obsPoints = <ObsPoint>[];
-    for (final row in rowsAsListOfValues) {
-      if(row[7].toString() == "") {
-        continue;
-      }
-      obsPoints.add(ObsPoint.fromList(row));
-    }
-    if (mounted) {
-      state = state.copyWith(
-        obsPoints: obsPoints,
-        isKansokutenLoaded: true,
-      );
-      logger.i("観測点データを読み込みました: ${state.obsPoints.length}");
-    }
-  }
-
   void changeMapColor(
       {Color newMapBaseColor = mapBaseColor,
       Color newMapLineColor = mapLineColor}) {
@@ -124,5 +100,29 @@ class KmoniMapNotifier extends StateNotifier<KmoniMapModel> {
     state = state.copyWith(
       japanPolygons: newJapanPolygons,
     );
+  }
+
+  // マップをなめらかに移動します
+  void mapMoveToLatLng(LatLng latLng, double zoomLevel) {
+    log("INFUNC");
+    final latTween = Tween<double>(
+        begin: state.mapController.center.latitude, end: latLng.latitude);
+    final lngTween = Tween<double>(
+        begin: state.mapController.center.longitude, end: latLng.longitude);
+    final zoomTween =
+        Tween<double>(begin: state.mapController.zoom, end: zoomLevel);
+    final controller = useAnimationController(
+      duration: const Duration(milliseconds: 500),
+    );
+    Animation<double> animation = CurvedAnimation(
+      parent: controller,
+      curve: Curves.easeInOut,
+    );
+
+    animation.addListener(() {
+      state.mapController.move(
+          LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+          zoomTween.evaluate(animation));
+    });
   }
 }

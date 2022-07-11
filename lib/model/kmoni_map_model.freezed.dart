@@ -26,13 +26,8 @@ mixin _$KmoniMapModel {
   List<Polygon> get tsunamiPolygons =>
       throw _privateConstructorUsedError; // Mapのコントローラ
   MapController get mapController =>
-      throw _privateConstructorUsedError; // 観測点の位置
-  List<ObsPoint> get obsPoints =>
       throw _privateConstructorUsedError; // マップがロードされたかどうか
   bool get isMapLoaded => throw _privateConstructorUsedError;
-
-  /// 観測点CSVがロードされたかどうか
-  bool get isKansokutenLoaded => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $KmoniMapModelCopyWith<KmoniMapModel> get copyWith =>
@@ -49,9 +44,7 @@ abstract class $KmoniMapModelCopyWith<$Res> {
       List<Polygon> worldPolygons,
       List<Polygon> tsunamiPolygons,
       MapController mapController,
-      List<ObsPoint> obsPoints,
-      bool isMapLoaded,
-      bool isKansokutenLoaded});
+      bool isMapLoaded});
 }
 
 /// @nodoc
@@ -69,9 +62,7 @@ class _$KmoniMapModelCopyWithImpl<$Res>
     Object? worldPolygons = freezed,
     Object? tsunamiPolygons = freezed,
     Object? mapController = freezed,
-    Object? obsPoints = freezed,
     Object? isMapLoaded = freezed,
-    Object? isKansokutenLoaded = freezed,
   }) {
     return _then(_value.copyWith(
       japanPolygons: japanPolygons == freezed
@@ -90,17 +81,9 @@ class _$KmoniMapModelCopyWithImpl<$Res>
           ? _value.mapController
           : mapController // ignore: cast_nullable_to_non_nullable
               as MapController,
-      obsPoints: obsPoints == freezed
-          ? _value.obsPoints
-          : obsPoints // ignore: cast_nullable_to_non_nullable
-              as List<ObsPoint>,
       isMapLoaded: isMapLoaded == freezed
           ? _value.isMapLoaded
           : isMapLoaded // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isKansokutenLoaded: isKansokutenLoaded == freezed
-          ? _value.isKansokutenLoaded
-          : isKansokutenLoaded // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -118,9 +101,7 @@ abstract class _$$_KmoniMapModelCopyWith<$Res>
       List<Polygon> worldPolygons,
       List<Polygon> tsunamiPolygons,
       MapController mapController,
-      List<ObsPoint> obsPoints,
-      bool isMapLoaded,
-      bool isKansokutenLoaded});
+      bool isMapLoaded});
 }
 
 /// @nodoc
@@ -140,9 +121,7 @@ class __$$_KmoniMapModelCopyWithImpl<$Res>
     Object? worldPolygons = freezed,
     Object? tsunamiPolygons = freezed,
     Object? mapController = freezed,
-    Object? obsPoints = freezed,
     Object? isMapLoaded = freezed,
-    Object? isKansokutenLoaded = freezed,
   }) {
     return _then(_$_KmoniMapModel(
       japanPolygons: japanPolygons == freezed
@@ -161,17 +140,9 @@ class __$$_KmoniMapModelCopyWithImpl<$Res>
           ? _value.mapController
           : mapController // ignore: cast_nullable_to_non_nullable
               as MapController,
-      obsPoints: obsPoints == freezed
-          ? _value._obsPoints
-          : obsPoints // ignore: cast_nullable_to_non_nullable
-              as List<ObsPoint>,
       isMapLoaded: isMapLoaded == freezed
           ? _value.isMapLoaded
           : isMapLoaded // ignore: cast_nullable_to_non_nullable
-              as bool,
-      isKansokutenLoaded: isKansokutenLoaded == freezed
-          ? _value.isKansokutenLoaded
-          : isKansokutenLoaded // ignore: cast_nullable_to_non_nullable
               as bool,
     ));
   }
@@ -185,13 +156,10 @@ class _$_KmoniMapModel implements _KmoniMapModel {
       required final List<Polygon> worldPolygons,
       required final List<Polygon> tsunamiPolygons,
       required this.mapController,
-      required final List<ObsPoint> obsPoints,
-      required this.isMapLoaded,
-      required this.isKansokutenLoaded})
+      required this.isMapLoaded})
       : _japanPolygons = japanPolygons,
         _worldPolygons = worldPolygons,
-        _tsunamiPolygons = tsunamiPolygons,
-        _obsPoints = obsPoints;
+        _tsunamiPolygons = tsunamiPolygons;
 
   /// Mapに表示する日本のポリゴン
   final List<Polygon> _japanPolygons;
@@ -226,26 +194,13 @@ class _$_KmoniMapModel implements _KmoniMapModel {
 // Mapのコントローラ
   @override
   final MapController mapController;
-// 観測点の位置
-  final List<ObsPoint> _obsPoints;
-// 観測点の位置
-  @override
-  List<ObsPoint> get obsPoints {
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_obsPoints);
-  }
-
 // マップがロードされたかどうか
   @override
   final bool isMapLoaded;
 
-  /// 観測点CSVがロードされたかどうか
-  @override
-  final bool isKansokutenLoaded;
-
   @override
   String toString() {
-    return 'KmoniMapModel(japanPolygons: $japanPolygons, worldPolygons: $worldPolygons, tsunamiPolygons: $tsunamiPolygons, mapController: $mapController, obsPoints: $obsPoints, isMapLoaded: $isMapLoaded, isKansokutenLoaded: $isKansokutenLoaded)';
+    return 'KmoniMapModel(japanPolygons: $japanPolygons, worldPolygons: $worldPolygons, tsunamiPolygons: $tsunamiPolygons, mapController: $mapController, isMapLoaded: $isMapLoaded)';
   }
 
   @override
@@ -262,11 +217,7 @@ class _$_KmoniMapModel implements _KmoniMapModel {
             const DeepCollectionEquality()
                 .equals(other.mapController, mapController) &&
             const DeepCollectionEquality()
-                .equals(other._obsPoints, _obsPoints) &&
-            const DeepCollectionEquality()
-                .equals(other.isMapLoaded, isMapLoaded) &&
-            const DeepCollectionEquality()
-                .equals(other.isKansokutenLoaded, isKansokutenLoaded));
+                .equals(other.isMapLoaded, isMapLoaded));
   }
 
   @override
@@ -276,9 +227,7 @@ class _$_KmoniMapModel implements _KmoniMapModel {
       const DeepCollectionEquality().hash(_worldPolygons),
       const DeepCollectionEquality().hash(_tsunamiPolygons),
       const DeepCollectionEquality().hash(mapController),
-      const DeepCollectionEquality().hash(_obsPoints),
-      const DeepCollectionEquality().hash(isMapLoaded),
-      const DeepCollectionEquality().hash(isKansokutenLoaded));
+      const DeepCollectionEquality().hash(isMapLoaded));
 
   @JsonKey(ignore: true)
   @override
@@ -292,9 +241,7 @@ abstract class _KmoniMapModel implements KmoniMapModel {
       required final List<Polygon> worldPolygons,
       required final List<Polygon> tsunamiPolygons,
       required final MapController mapController,
-      required final List<ObsPoint> obsPoints,
-      required final bool isMapLoaded,
-      required final bool isKansokutenLoaded}) = _$_KmoniMapModel;
+      required final bool isMapLoaded}) = _$_KmoniMapModel;
 
   @override
 
@@ -310,14 +257,8 @@ abstract class _KmoniMapModel implements KmoniMapModel {
   List<Polygon> get tsunamiPolygons => throw _privateConstructorUsedError;
   @override // Mapのコントローラ
   MapController get mapController => throw _privateConstructorUsedError;
-  @override // 観測点の位置
-  List<ObsPoint> get obsPoints => throw _privateConstructorUsedError;
   @override // マップがロードされたかどうか
   bool get isMapLoaded => throw _privateConstructorUsedError;
-  @override
-
-  /// 観測点CSVがロードされたかどうか
-  bool get isKansokutenLoaded => throw _privateConstructorUsedError;
   @override
   @JsonKey(ignore: true)
   _$$_KmoniMapModelCopyWith<_$_KmoniMapModel> get copyWith =>

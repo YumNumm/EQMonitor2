@@ -3,7 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../const/kmoni/jma_intensity.dart';
 
-part 'analyzed_point.model.freezed.dart';
+part 'analyzed_point_model.freezed.dart';
 
 @freezed
 class AnalyzedPoint with _$AnalyzedPoint {
